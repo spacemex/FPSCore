@@ -1,0 +1,10 @@
+﻿#pragma once
+#include "NativeGameplayTags.h"
+
+namespace  FPSCoreGameplayTags
+{
+	FPSCORE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move);
+	FPSCORE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Look);
+	FPSCORE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Jump);
+	FPSCORE_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Crouch);
+}
