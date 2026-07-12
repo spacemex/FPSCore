@@ -4,6 +4,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "FPSCoreGameplayAbility.generated.h"
 
+class AFPSCorePlayerState;
+
 UENUM()
 enum class EFPSCoreAbilityActivationPolicy : uint8
 {
@@ -23,6 +25,11 @@ class FPSCORE_API UFPSCoreGameplayAbility : public UGameplayAbility
 public:
 	EFPSCoreAbilityActivationPolicy GetActivationPolicy() const {return ActivationPolicy;};
 
+	UFUNCTION(BlueprintPure,Category="FPS Core|Ability")
+	AFPSCorePlayerState* GetFPSCorePlayerState() const;
+
+	UFUNCTION(BlueprintPure,Category="FPS Core|Ability")
+	int32 GetOwningPlayerId() const;
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InputSystem|Ability Activation")
 	EFPSCoreAbilityActivationPolicy ActivationPolicy;
