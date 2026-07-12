@@ -39,6 +39,16 @@
 				"Mac",
 				"Linux"
 			]
+		},
+		{
+			"Name": "FPSCoreEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64",
+				"Mac",
+				"Linux"
+			]
 		}
 	]
 }
