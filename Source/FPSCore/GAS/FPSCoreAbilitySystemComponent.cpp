@@ -12,15 +12,23 @@ UFPSCoreAbilitySystemComponent::UFPSCoreAbilitySystemComponent()
 
 void UFPSCoreAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
 {
-	if (InputTag.IsValid())
+	if (!InputTag.IsValid())
 	{
-		for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
+		return;
+	}
+	for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
+	{
+		if (!AbilitySpec.Ability || !AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
 		{
-			if (AbilitySpec.Ability && (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag)))
-			{
-				InputPressedSpecHandles.AddUnique(AbilitySpec.Handle);
-				InputHeldSpecHandles.AddUnique(AbilitySpec.Handle);
-			}
+			continue;
+		}
+		
+		const bool bWasAlreadyHeld = InputHeldSpecHandles.Contains(AbilitySpec.Handle);
+		InputHeldSpecHandles.AddUnique(AbilitySpec.Handle);
+
+		if (!bWasAlreadyHeld)
+		{
+			InputPressedSpecHandles.AddUnique(AbilitySpec.Handle);
 		}
 	}
 }
@@ -52,8 +60,7 @@ void UFPSCoreAbilitySystemComponent::CancelAbilitySpec(FGameplayAbilitySpec& Spe
 
 void UFPSCoreAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
 {
-	static TArray<FGameplayAbilitySpecHandle> AbilitiesToActivate;
-	AbilitiesToActivate.Reset();
+	TArray<FGameplayAbilitySpecHandle,TInlineAllocator<8>> AbilitiesToActivate;
 	
 	for (const FGameplayAbilitySpecHandle& SpecHandle : InputHeldSpecHandles)
 	{
