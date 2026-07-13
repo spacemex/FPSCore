@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "Character/FPSCorePlayerController.h"
+#include "Components/FPSCoreHealthComponent.h"
 #include "FPSCore/Public/Character/FPSCorePlayerState.h"
 #include "Input/FPSCoreGameplayTags.h"
 #include "Input/FPSCoreInputBinding.h"
@@ -15,6 +16,8 @@ AFPSCoreCharacter::AFPSCoreCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
+	
+	HealthComponent = CreateDefaultSubobject<UFPSCoreHealthComponent>("HealthComponent");
 }
 
 void AFPSCoreCharacter::BeginPlay()
@@ -94,6 +97,11 @@ void AFPSCoreCharacter::InitializeAbilitySystem()
 	}
 	
 	FPSPlayerState->InitializeAbilitySystem(this);
+
+	if (IsValid(HealthComponent))
+	{
+		HealthComponent->InitializeWithAbilitySystem(FPSPlayerState->GetFPSCoreAbilitySystemComponent(),FPSPlayerState->GetHealthSet());
+	}
 }
 
 UAbilitySystemComponent* AFPSCoreCharacter::GetAbilitySystemComponent() const
@@ -161,6 +169,11 @@ void AFPSCoreCharacter::Input_AbilityTagReleased(FGameplayTag InputTag)
 
 void AFPSCoreCharacter::UnPossessed()
 {
+	if (IsValid(HealthComponent))
+	{
+		HealthComponent->UninitializeFromAbilitySystem();
+	}
+	
 	if (UFPSCoreAbilitySystemComponent* ASC = GetFPSCoreAbilitySystemComponent())
 	{
 		ASC->ClearAbilityInput();

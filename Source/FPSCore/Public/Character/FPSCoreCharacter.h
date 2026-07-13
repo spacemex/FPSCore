@@ -11,6 +11,7 @@
 class UFPSCoreAbilitySystemComponent;
 class UAbilitySystemComponent;
 class AFPSCorePlayerState;
+class UFPSCoreHealthComponent;
 struct FInputActionValue;
 
 UCLASS()
@@ -25,8 +26,18 @@ public:
 	
 	UFUNCTION(BlueprintPure,Category="FPS Core|Abilities")
 	UFPSCoreAbilitySystemComponent* GetFPSCoreAbilitySystemComponent() const;
+	
+	UFUNCTION(BlueprintPure,Category="FPS Core|Health")
+	UFPSCoreHealthComponent* GetFPSCoreHealthComponent() const
+	{
+		return HealthComponent;
+	}
 
 protected:
+	
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="FPS Core|Health",meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UFPSCoreHealthComponent> HealthComponent;
+
 	virtual void BeginPlay() override;
 
 	virtual void PossessedBy(AController* NewController) override;
