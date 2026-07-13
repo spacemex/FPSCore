@@ -11,6 +11,9 @@
 class UFPSCoreAbilitySystemComponent;
 class UAbilitySystemComponent;
 
+class UFPSCoreHealthSet;
+class UGameplayEffect;
+
 UCLASS()
 class FPSCORE_API AFPSCorePlayerState : public APlayerState, public IAbilitySystemInterface
 {
@@ -25,6 +28,12 @@ public:
 	
 	void InitializeAbilitySystem(AActor* NewAvatarActor);
 	
+	UFUNCTION(BlueprintPure,Category="FPS Core|Health")
+	UFPSCoreHealthSet* GetHealthSet() const
+	{
+		return HealthSet;
+	}
+	
 protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="FPS Core|Abilities",meta=(AllowPrivateAccess="true"))
 	TObjectPtr<UFPSCoreAbilitySystemComponent> AbilitySystemComponent;
@@ -32,9 +41,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="FPS Core|Abilities")
 	TObjectPtr<UFPSCoreAbilitySet> DefaultAbilitySet;
 	
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="FPS Core|Attributes",meta=(AllowPrivateAccess="true"))
+	TObjectPtr<UFPSCoreHealthSet> HealthSet;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="FPS Core|Attributes")
+	TSubclassOf<UGameplayEffect> DefaultAttributesEffect;
+	
 private:
 	UPROPERTY(Transient)
 	FFPSCoreAbilitySet_GrantedHandles DefaultAbilitySetHandles;
+	
+	void ApplyDefaultAttributes();
+	
+	TWeakObjectPtr<AActor> LastInitializedAvatar;
 	
 	bool bDefaultAbilitySetGranted = false;
 };
